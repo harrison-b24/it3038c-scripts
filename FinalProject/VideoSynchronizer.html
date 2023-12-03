@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic YouTube Playback</title>
+    <style>
+        body {	
+            background-color: #333; /* Dark grey color */
+            color: #fff; /* White text color for better readability */
+        }
+
+        #clock {
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+        }
+
+        #youtubeVideo {	
+            display: block;
+            margin: auto;
+            /* Uncomment the following lines if you want to center both horizontally and vertically */
+            /* position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); */
+        }
+
+        /* Adjust input and button styles for better visibility on dark background */
+        #videoForm {
+            margin-top: 20px;
+        }
+
+        input, button {
+            color: #333; /* Dark grey text color */
+            background-color: #fff; /* White background color */
+            border: 1px solid #333; /* Dark grey border */
+        }
+    </style>
+</head>
+<body>
+    <form id="videoForm">
+        <label for="videoLink">Enter YouTube Video Link:</label>
+        <input type="text" id="videoLink" placeholder="Paste YouTube link here">
+        <button type="button" onclick="updateVideo()">Update Video</button>
+    </form>
+
+    <div id="clock"></div>
+    <iframe id="youtubeVideo" width="1920" height="1080" frameborder="0" allowfullscreen></iframe>
+
+    <script>
+        function extractVideoId(link) {		// Gets video ID from youtube link
+            var url = new URL(link);
+            return url.searchParams.get('v');
+        }
+
+        function updateVideo() {	// Updates the html doc with the retreived video ID
+            var videoLink = document.getElementById('videoLink').value;
+            var videoId = extractVideoId(videoLink);
+
+            console.log('Extracted Video ID:', videoId);
+
+            if (videoId) {	// Checks for errors in the link
+                document.getElementById('youtubeVideo').src = 'https://www.youtube.com/embed/' + videoId;
+            } else {
+                alert('Invalid YouTube video link. Please enter a valid link.');
+            }
+        }
+
+        function updateClock() {	//Updates the clock
+            var now = new Date();
+            var hours = now.getHours();
+            var minutes = now.getMinutes();
+            var seconds = now.getSeconds();
+
+            hours = (hours < 10) ? '0' + hours : hours;
+            minutes = (minutes < 10) ? '0' + minutes : minutes;
+            seconds = (seconds < 10) ? '0' + seconds : seconds;
+
+            var timeString = hours + ':' + minutes + ':' + seconds;
+            document.getElementById('clock').textContent = 'Current Time: ' + timeString;
+
+            setTimeout(updateClock, 1000);
+        }
+
+        updateClock();  // Start the clock initially
+    </script>
+</body>
+</html>
